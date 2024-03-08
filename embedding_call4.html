@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OpenAI API - embeddings API call</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    textarea {
+      height: 200px;
+    }
+    #response{
+        height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>OpenAI - embeddings API call</h1>
+    <form id="apiForm">
+      <div class="form-group">
+        <label for="apiKey">API_KEY</label>
+        <input type="text" class="form-control" id="apiKey" name="apiKey">
+      </div>
+      <div class="form-group">
+        <label for="enterText">ENTER_TEXT</label>
+        <input type="text" class="form-control" id="enterText" name="enterText">
+      </div>
+      <button type="button" class="btn btn-primary" onclick="sendRequest()">Send Request</button>
+      <div class="form-group">
+        <label for="response">Response</label>
+        <textarea class="form-control" id="response" readonly></textarea>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function sendRequest() {
+      var apiKey = document.getElementById("apiKey").value;
+      var enterText = document.getElementById("enterText").value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://api.openai.com/v1/embeddings", true);
+      xhr.setRequestHeader("Authorization", "Bearer " + apiKey);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          var responseText = JSON.stringify(JSON.parse(xhr.responseText), null, 2);
+          document.getElementById("response").value = responseText;
+        }
+      };
+
+      var data = {
+        input: enterText,
+        model: "text-embedding-ada-002",
+        encoding_format: "float"
+      };
+
+      xhr.send(JSON.stringify(data));
+    }
+  </script>
+</body>
+</html>

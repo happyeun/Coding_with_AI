@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenAI API embeddings call</title>
+<script>
+function sendRequest() {
+  var apiKey = document.getElementById('apiKey').value; //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
+  var enterText = document.getElementById('enterText').value;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://api.openai.com/v1/embeddings', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('Authorization', 'Bearer ' + apiKey);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      var responseTextArea = document.getElementById('responseTextArea');
+      //responseTextArea.value = xhr.responseText;
+      responseTextArea.value = JSON.stringify(JSON.parse(xhr.responseText), null, 4)
+    }
+  };
+  var data = JSON.stringify({
+    input: enterText,
+    model: 'text-embedding-ada-002',
+    encoding_format: 'float'
+  });
+  xhr.send(data);
+}
+</script>
+</head>
+<body>
+  <h1>OpenAI API embeddings call</h1>
+  <form>
+    <div>
+      <label for="apiKey">API_KEY:</label>
+      <input type="text" id="apiKey" name="apiKey">
+    </div>
+    <div>
+      <label for="enterText">ENTER_TEXT:</label>
+      <input type="text" id="enterText" name="enterText">
+    </div>
+    <button type="button" onclick="sendRequest()">Send Request</button>
+    <div>
+      <label for="responseTextArea">Response:</label>
+      <textarea id="responseTextArea" rows="20" cols="60" readonly></textarea>
+    </div>
+  </form>
+</body>
+</html>
